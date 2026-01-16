@@ -269,7 +269,7 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ## 🔗 Links
 
-- **Twitter**: []()
+- **Twitter**: [@ObscurateAgent](https://x.com/ObscurateAgent)
 
 ---
 
