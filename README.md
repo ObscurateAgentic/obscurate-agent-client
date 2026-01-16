@@ -1,12 +1,23 @@
-🌑 Obscurate Client
-Privacy-First Python SDK for AI Agents
+# 🌑 Obscurate Client
+
+**Privacy-First Python SDK for AI Agents**
 
 Give your autonomous agents "Dark Pool" capabilities with automatic x402 payment handling and zero-knowledge proof generation.
 
-PyPI version Python 3.10+ License: MIT Code style: ruff
+[![PyPI version](https://badge.fury.io/py/obscurate-client.svg)](https://pypi.org/project/obscurate-client/)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
 
-🚀 Quick Start
+---
+
+## 🚀 Quick Start
+
+```bash
 pip install obscurate-client
+```
+
+```python
 from obscurate import DarkPoolClient
 
 async with DarkPoolClient() as client:
@@ -20,36 +31,54 @@ async with DarkPoolClient() as client:
     # Make a request - payments are handled automatically!
     response = await client.http.get("https://api.expensive-data.com/premium")
     print(response.json())
-That's it. If the endpoint returns 402 Payment Required, the client automatically:
+```
 
-Extracts the payment challenge
-Generates a zero-knowledge proof via the Privacy Sidecar
-Retries the request with the payment authorization
-🎯 Features
-✅ Automatic x402 Payment Handling
+**That's it.** If the endpoint returns `402 Payment Required`, the client automatically:
+1. Extracts the payment challenge
+2. Generates a zero-knowledge proof via the Privacy Sidecar
+3. Retries the request with the payment authorization
+
+---
+
+## 🎯 Features
+
+### ✅ Automatic x402 Payment Handling
+```python
 # No manual 402 handling needed
 response = await client.http.get("https://api.data.com/premium")
 # If payment required → handled silently
-✅ Spending Limits
+```
+
+### ✅ Spending Limits
+```python
 # Protect against runaway costs
 client = DarkPoolClient(
     max_spend_per_tx=5.0,    # Max $5 per transaction
     max_spend_hourly=100.0,   # Max $100 per hour
 )
-✅ Dry-Run Mode
+```
+
+### ✅ Dry-Run Mode
+```python
 # Test your agent without spending real money
 client = DarkPoolClient(dry_run=True)
 
 # This will log the payment but not execute it
 response = await client.http.get("https://api.data.com/premium")
 # Raises DryRunError with payment details
-✅ Pay-Protected Decorators
+```
+
+### ✅ Pay-Protected Decorators
+```python
 @client.pay_protected(max_spend=10.0)
 async def fetch_alpha_dataset():
     """Buy premium dataset with spending limit."""
     response = await client.http.get("https://api.data.com/alpha")
     return response.json()
-✅ Sync and Async Support
+```
+
+### ✅ Sync and Async Support
+```python
 # Async (recommended)
 async with DarkPoolClient() as client:
     balance = await client.wallet.get_balance()
@@ -57,7 +86,13 @@ async with DarkPoolClient() as client:
 # Sync (for legacy code)
 with SyncDarkPoolClient() as client:
     balance = client.wallet.get_balance()
-📖 Real-World Example: Buy a Dataset
+```
+
+---
+
+## 📖 Real-World Example: Buy a Dataset
+
+```python
 import asyncio
 from obscurate import DarkPoolClient, InsufficientBalanceError
 
@@ -107,16 +142,26 @@ async def buy_dataset():
             return None
 
 asyncio.run(buy_dataset())
-⚙️ Configuration
-Environment Variables
-Variable	Description	Default
-OBSCURATE_SIDECAR_URL	Privacy Sidecar URL	http://localhost:3000
-OBSCURATE_DRY_RUN	Enable dry-run mode	false
-OBSCURATE_MAX_SPEND_TX	Max USDC per transaction	0 (no limit)
-OBSCURATE_MAX_SPEND_HOURLY	Max USDC per hour	0 (no limit)
-OBSCURATE_MAX_RETRIES	Payment retry attempts	3
-OBSCURATE_TIMEOUT	Request timeout (seconds)	30
-Constructor Arguments
+```
+
+---
+
+## ⚙️ Configuration
+
+### Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `OBSCURATE_SIDECAR_URL` | Privacy Sidecar URL | `http://localhost:3000` |
+| `OBSCURATE_DRY_RUN` | Enable dry-run mode | `false` |
+| `OBSCURATE_MAX_SPEND_TX` | Max USDC per transaction | `0` (no limit) |
+| `OBSCURATE_MAX_SPEND_HOURLY` | Max USDC per hour | `0` (no limit) |
+| `OBSCURATE_MAX_RETRIES` | Payment retry attempts | `3` |
+| `OBSCURATE_TIMEOUT` | Request timeout (seconds) | `30` |
+
+### Constructor Arguments
+
+```python
 client = DarkPoolClient(
     sidecar_url="http://sidecar:3000",
     encrypted_note="...",           # Your encrypted note
@@ -127,9 +172,15 @@ client = DarkPoolClient(
     max_retries=3,                  # Payment retries
     timeout=30.0,                   # Request timeout
 )
-🛡️ Error Handling
+```
+
+---
+
+## 🛡️ Error Handling
+
 The SDK provides typed exceptions for clean error handling:
 
+```python
 from obscurate import (
     DarkPoolClient,
     InsufficientBalanceError,
@@ -161,7 +212,13 @@ async with DarkPoolClient() as client:
         # Sidecar is down
         print(f"Sidecar unreachable: {e.url}")
         # → Retry with backoff
-🏗️ Architecture
+```
+
+---
+
+## 🏗️ Architecture
+
+```
 ┌─────────────────────────────────────────────────────────────────┐
 │                     YOUR AI AGENT                               │
 │  ┌─────────────────────────────────────────────────────────┐   │
@@ -179,9 +236,16 @@ async with DarkPoolClient() as client:
 │  │  • Transaction signing                                  │   │
 │  └─────────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────────┘
-The agent never handles private keys or signs transactions directly. All cryptographic operations are delegated to the Privacy Sidecar.
+```
 
-🧪 Testing
+The agent **never** handles private keys or signs transactions directly.
+All cryptographic operations are delegated to the Privacy Sidecar.
+
+---
+
+## 🧪 Testing
+
+```bash
 # Install dev dependencies
 pip install -e ".[dev]"
 
@@ -193,9 +257,23 @@ mypy obscurate_client/
 
 # Linting
 ruff check obscurate_client/
-📜 License
-MIT License - see LICENSE for details.
+```
 
-🔗 Links
+---
 
-Twitter: 
+## 📜 License
+
+MIT License - see [LICENSE](LICENSE) for details.
+
+---
+
+## 🔗 Links
+
+- **Twitter**: []()
+
+---
+
+<p align="center">
+  <sub>Built with 🖤 by the Obscurate team</sub>
+</p>
+
