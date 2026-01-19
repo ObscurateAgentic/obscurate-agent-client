@@ -1,4 +1,4 @@
-# 🌑 Obscurate Client
+# 🌑 Obscurate Client final version
 
 **Privacy-First Python SDK for AI Agents**
 
